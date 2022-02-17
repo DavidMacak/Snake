@@ -2,8 +2,9 @@
 {
     class Snake
     {
-        int height = 20;
-        int width = 60;
+        int height;
+        int width;
+        int speed;
         bool gameover;
 
         //Get Input
@@ -25,16 +26,17 @@
         //fruit
         int fruitPosX;
         int fruitPosY;
+        int fruitDiff = 0;
 
         Random random = new Random();
 
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
-
             while (true)
             {
                 Snake snake = new Snake();
+                snake.ChooseDifficulty();
                 Console.Clear();
                 snake.gameover = false;
                 snake.DrawArena();
@@ -54,9 +56,65 @@
                 Countdown(snake.width, snake.height,5);
             }
         }
+
+        void ChooseDifficulty()
+        {
+            int userInput;
+            bool success = true;
+
+            while (success)
+            {
+                Console.Clear();
+                Console.SetCursorPosition(0, 0);
+
+                Console.WriteLine("Choose difficulty:");
+                Console.WriteLine("1 - Easy");
+                Console.WriteLine("2 - Normal");
+                Console.WriteLine("3 - Pro");
+                Console.WriteLine("4 - Cheater");
+
+                Int32.TryParse(Console.ReadLine(), out userInput);
+                switch (userInput)
+                {
+                    case 1:
+                        SetDifficulty(20, 15, 150);
+                        success = false;
+                        break;
+                    case 2:
+                        SetDifficulty(40, 20, 100);
+                        success = false;
+                        break;
+                    case 3:
+                        SetDifficulty(40, 20, 75);
+                        success = false;
+                        break;
+                    case 4:
+                        SetDifficulty(40, 20, 25);
+                        success = false;
+                        break;
+                    case 69:
+                        SetDifficulty(30, 15, 69);
+                        fruitDiff = 69;
+                        success = false;
+                        break;
+                    case 420:
+                        SetDifficulty(20, 10, 500);
+                        fruitDiff = 420;
+                        success = false;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        void SetDifficulty(int arenaX, int arenaY, int speed)
+        {
+            width = arenaX;
+            height = arenaY;
+            this.speed = speed;
+        }
         void Update()
         {
-            
             GetInput();
             DrawScore();
 
@@ -66,14 +124,13 @@
                 gameover = true;
                 return;
             }
-            //
-            DrawFruit();
             if (snakeParts != 0)
             {
                 DrawSnakeParts();
             }
+            DrawFruit();
             DrawSnake();
-            Thread.Sleep(100);
+            Thread.Sleep(speed);
 
         }
         bool Logic()
@@ -218,8 +275,22 @@
         }
         void CreateFruit()
         {
-            fruitPosX = random.Next(1, width);
-            fruitPosY = random.Next(1, height);
+            switch (fruitDiff)
+            {
+                case 0:
+                    fruitPosX = random.Next(1, width);
+                    fruitPosY = random.Next(1, height);
+                    break;
+                case 69:
+                    //TODO
+                    break;
+                case 420:
+                    int[] arrPosX = { 1, width - 1 };
+                    int[] arrPosY = { 1, height - 1 };
+                    fruitPosX = arrPosX[random.Next(0, 2)];
+                    fruitPosY = arrPosY[random.Next(0, 2)];
+                    break;
+            }
         }
         void CreateSnake()
         {
