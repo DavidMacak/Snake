@@ -2,6 +2,6 @@
 
 C# | .NET 6 | Console
 
-Simple console snake game.
+Klasický had v konzoli.
 
-Controls: WASD
+Ovládání: WASD
